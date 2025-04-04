@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 10)
+local Lib = LibStub:NewLibrary('ItemSearchModify-1.3', 10)
 if Lib then
 	Lib.Unusable, Lib.Collected, Lib.Bangs = {}, {}, {}
 	Lib.Filters = nil
@@ -31,6 +31,8 @@ local L = {
     CLASS_REQUIREMENT = ITEM_CLASSES_ALLOWED:format('(.*)'),
     IN_SET = EQUIPMENT_SETS:format('(.*)'),
 }
+local LE_ITEM_BIND_ON_ACQUIRE = LE_ITEM_BIND_ON_ACQUIRE or Enum.ItemBind.OnAcquire
+local LE_ITEM_BIND_QUEST = LE_ITEM_BIND_QUEST or Enum.ItemBind.Quest
 
 
 --[[ General API ]]--
@@ -84,7 +86,7 @@ end
 
 --[[ Sets and Collections ]]--
 
-if LE_EXPANSION_LEVEL_CURRENT > 2 then
+if LE_EXPANSION_LEVEL_CURRENT >= 2 then
 	function Lib:IsUncollected(id, link)
 		if not Lib.Collected[id] and C.Item.IsDressableItemByID(id) and not C.TransmogCollection.PlayerHasTransmog(id) then
 			local data = C.TooltipInfo.GetHyperlink(link)
@@ -114,7 +116,7 @@ if C.AddOns.IsAddOnLoaded('ItemRack') then
 		end
 	end
 
-elseif LE_EXPANSION_LEVEL_CURRENT > 2 then
+elseif LE_EXPANSION_LEVEL_CURRENT >= 2 then
 	function Lib:BelongsToSet(id, search)
 		if C.Item.IsEquippableItem(id) then
 			for i, setID in pairs(C.EquipmentSet.GetEquipmentSetIDs()) do
